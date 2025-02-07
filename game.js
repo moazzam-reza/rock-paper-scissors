@@ -6,12 +6,14 @@ function getComputerChoice() {
     return numToChoice[randVal.toString()]
 }
 
+/* not the best input sanitation but you told me to preserve my effort haha*/
 function getHumanChoice() {
+    const validChoices = ['r', 'p', 's']
+    let inputToChoice = {'r': 'rock', 's': 'scissors', 'p': 'paper'}
     let humanInput = prompt("Enter 'r' for rock, 'p' for paper, or 's' for scissors.")
 
-    inputToChoice = {'r': 'rock', 's': 'scissors', 'p': 'paper'}
-
-    return inputToChoice[humanInput.toLowerCase()]
+    console.log('if you inputted the wrong thing, I will assume you chose rock')
+    return validChoices.includes(humanInput) ? inputToChoice[humanInput.toLowerCase()] : 'rock';
 }
 
 function playRound(humanChoice, computerChoice) {
