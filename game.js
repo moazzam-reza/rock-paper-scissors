@@ -16,43 +16,55 @@ function getHumanChoice() {
     return validChoices.includes(humanInput) ? inputToChoice[humanInput.toLowerCase()] : 'rock';
 }
 
+
+let humanScore = 0;
+let computerScore = 0;
 function playRound(humanChoice, computerChoice) {
     winnerLegend = {'rock': 'scissors', 'scissors': 'paper', 'paper': 'rock'}
+    let event = new CustomEvent('roundPlayed', {detail: {humanChoice: humanChoice.toUpperCase(), computerChoice: computerChoice.toUpperCase(), winner: null}});
 
     if (winnerLegend[humanChoice] === computerChoice) {
         console.log(`You win! ${humanChoice} beats ${computerChoice}`)
-        return 'h'
+        event.detail.winner = 'human';
+        humanScore += 1;
     }
     else if (winnerLegend[computerChoice] === humanChoice) {
         console.log(`You lose! ${computerChoice} beats ${humanChoice}`)
-        return 'c'
+        event.detail.winner = 'computer';
+        computerScore += 1;
     }
     else {
         console.log(`You both chose ${humanChoice}`);
-        return 'd'
+        event.detail.winner = 'draw';
     }
+    let scoreboardTemp = document.querySelector("#scoreboard");
+    scoreboardTemp.dispatchEvent(event);
 }
 
-function playGame() {
-    humanScore = 0;
-    computerScore = 0;
+const buttons = document.querySelector("#buttons");
+buttons.addEventListener('mouseup', (e) => {
+    console.log(e.target.textContent)
+    let humanChoice = e.target.textContent.toLowerCase();
+    playRound(humanChoice, getComputerChoice());
+})
 
-    for (let i = 0; i < 5; i++) {
-        roundWinner = playRound(getHumanChoice(), getComputerChoice());
+const scoreboard = document.querySelector("#scoreboard");
+scoreboard.addEventListener('roundPlayed', (e) => {
+    scoreboard.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
 
-        if (roundWinner === 'h') humanScore++;
-        if (roundWinner == 'c') computerScore++;
-    }
-
-    if (humanScore > computerScore) {
-        console.log(`You won! ${humanScore}-${computerScore}`);
+    const outcome = document.querySelector("#outcome");
+    if (humanScore == 5 || computerScore == 5) {
+        outcome.textContent = `${e.detail.winner.toUpperCase()} WINS. You chose ${e.detail.humanChoice} and
+        computer chose ${e.detail.computerChoice}.`
     } 
-    else if (computerScore > humanScore) {
-        console.log(`You lost. ${humanScore}-${computerScore}`);
+    else if (e.detail.winner == 'draw') {
+        outcome.textContent = `Draw. You both chose ${e.detail.humanChoice}.`;
     }
-    else {
-        console.log(`Draw. ${humanScore}-${computerScore}`);
+    else if (e.detail.winner == 'human') {
+        outcome.textContent = `You chose ${e.detail.humanChoice} and computer chose ${e.detail.computerChoice}. +1 point for YOU.`;
     }
+    else if (e.detail.winner == 'computer') {
+        outcome.textContent = `You chose ${e.detail.humanChoice} and computer chose ${e.detail.computerChoice}. +1 point for COMPUTER.`;
+    }
+})
 
-    return 'Game over!';
-}
