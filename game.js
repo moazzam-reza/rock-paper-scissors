@@ -56,6 +56,8 @@ scoreboard.addEventListener('roundPlayed', (e) => {
     if (humanScore == 5 || computerScore == 5) {
         outcome.textContent = `${e.detail.winner.toUpperCase()} WINS. You chose ${e.detail.humanChoice} and
         computer chose ${e.detail.computerChoice}.`
+        humanScore = 0;
+        computerScore = 0;
     } 
     else if (e.detail.winner == 'draw') {
         outcome.textContent = `Draw. You both chose ${e.detail.humanChoice}.`;
