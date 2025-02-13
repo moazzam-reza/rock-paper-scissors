@@ -55,7 +55,9 @@ scoreboard.addEventListener('roundPlayed', (e) => {
     const outcome = document.querySelector("#outcome");
     if (humanScore == 5 || computerScore == 5) {
         outcome.textContent = `${e.detail.winner.toUpperCase()} WINS. You chose ${e.detail.humanChoice} and
-        computer chose ${e.detail.computerChoice}.`
+        computer chose ${e.detail.computerChoice}. Just click any button to reset to 0pts and play again.`
+        humanScore = 0;
+        computerScore = 0;
     } 
     else if (e.detail.winner == 'draw') {
         outcome.textContent = `Draw. You both chose ${e.detail.humanChoice}.`;
@@ -67,4 +69,3 @@ scoreboard.addEventListener('roundPlayed', (e) => {
         outcome.textContent = `You chose ${e.detail.humanChoice} and computer chose ${e.detail.computerChoice}. +1 point for COMPUTER.`;
     }
 })
-
